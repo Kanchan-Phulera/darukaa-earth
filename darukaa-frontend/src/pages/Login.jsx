@@ -7,7 +7,7 @@ function Login() {
   const handleLogin = (event) => {
     event.preventDefault();
 
-    // Navigate to dashboard
+    // Demo login: any email/password goes to dashboard
     navigate("/dashboard");
   };
 
@@ -15,7 +15,6 @@ function Login() {
     <div className="login-page">
       <div className="login-card">
         <h1>Darukaa.Earth</h1>
-
         <h2>Login</h2>
 
         <form onSubmit={handleLogin}>
@@ -31,9 +30,7 @@ function Login() {
             required
           />
 
-          <button type="submit">
-            Login
-          </button>
+          <button type="submit">Login</button>
         </form>
 
         <p>
