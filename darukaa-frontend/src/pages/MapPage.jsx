@@ -18,94 +18,123 @@ function MapPage() {
     });
 
     map.on("load", () => {
-      // =============================
-      // GET SAVED SITES
-      // =============================
-
       const savedSites =
         JSON.parse(localStorage.getItem("darukaaSites")) || [];
-
-      // =============================
-      // SAMPLE SITES
-      // =============================
 
       const defaultSites = [
         {
           id: "default-1",
           name: "Pune Forest Project",
+          projectName: "Pune Forest Project",
           latitude: 18.5204,
           longitude: 73.8567,
           carbon: "1250 tCO₂e",
           biodiversity: "High",
+          status: "Active",
         },
         {
           id: "default-2",
           name: "Mumbai Mangrove Project",
+          projectName: "Mumbai Mangrove Project",
           latitude: 19.076,
           longitude: 72.8777,
           carbon: "2100 tCO₂e",
           biodiversity: "Very High",
+          status: "Active",
         },
         {
           id: "default-3",
           name: "Nashik Green Project",
+          projectName: "Nashik Green Project",
           latitude: 19.9975,
           longitude: 73.7898,
           carbon: "850 tCO₂e",
           biodiversity: "Medium",
+          status: "Active",
         },
       ];
 
-      // =============================
-      // COMBINE SITES
-      // =============================
-
-      const sites = [
-        ...defaultSites,
-        ...savedSites,
-      ];
-
-      // =============================
-      // CREATE MARKERS
-      // =============================
+      const sites = [...defaultSites, ...savedSites];
 
       sites.forEach((site) => {
         const popup = new mapboxgl.Popup({
           offset: 25,
+          closeButton: true,
+          closeOnClick: true,
         }).setHTML(`
-          <div>
-            <h3>${site.name}</h3>
+          <div style="
+            width: 240px;
+            background: #ffffff;
+            color: #1f2937;
+            padding: 14px;
+            font-family: Arial, sans-serif;
+            border-radius: 10px;
+            box-sizing: border-box;
+          ">
 
-            <p>
-              <strong>Project:</strong>
-              ${site.projectName || site.name}
-            </p>
+            <h3 style="
+              margin: 0 0 12px 0;
+              color: #14532d;
+              font-size: 18px;
+              font-weight: 700;
+            ">
+              ${site.name}
+            </h3>
 
-            <p>
-              <strong>Latitude:</strong>
-              ${site.latitude}
-            </p>
+            <div style="
+              font-size: 14px;
+              line-height: 1.6;
+            ">
 
-            <p>
-              <strong>Longitude:</strong>
-              ${site.longitude}
-            </p>
+              <p style="margin: 4px 0; color: #374151;">
+                <strong style="color: #111827;">Project:</strong>
+                ${site.projectName || site.project_name || site.name}
+              </p>
 
-            <p>
-              <strong>Carbon:</strong>
-              ${site.carbon || "Not available"}
-            </p>
+              <p style="margin: 4px 0; color: #374151;">
+                <strong style="color: #111827;">Carbon:</strong>
+                ${site.carbon || "Not available"}
+              </p>
 
-            <p>
-              <strong>Biodiversity:</strong>
-              ${site.biodiversity || "Not available"}
-            </p>
+              <p style="margin: 4px 0; color: #374151;">
+                <strong style="color: #111827;">Biodiversity:</strong>
+                ${site.biodiversity || "Not available"}
+              </p>
+
+              <p style="margin: 4px 0; color: #374151;">
+                <strong style="color: #111827;">Status:</strong>
+                ${site.status || "Active"}
+              </p>
+
+              <p style="margin: 4px 0; color: #374151;">
+                <strong style="color: #111827;">Latitude:</strong>
+                ${site.latitude}
+              </p>
+
+              <p style="margin: 4px 0 12px 0; color: #374151;">
+                <strong style="color: #111827;">Longitude:</strong>
+                ${site.longitude}
+              </p>
+
+            </div>
 
             <button
               id="analytics-${site.id}"
+              style="
+                width: 100%;
+                border: none;
+                padding: 9px 12px;
+                border-radius: 7px;
+                background: #1f5d42;
+                color: #ffffff;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+              "
             >
               View Analytics
             </button>
+
           </div>
         `);
 
@@ -117,31 +146,21 @@ function MapPage() {
           .setPopup(popup)
           .addTo(map);
 
-        // =============================
-        // ANALYTICS BUTTON
-        // =============================
-
         popup.on("open", () => {
           const button = document.getElementById(
             `analytics-${site.id}`
           );
 
           if (button) {
-            button.addEventListener("click", () => {
+            button.onclick = () => {
               navigate(
-                `/analytics?site=${encodeURIComponent(
-                  site.name
-                )}`
+                `/analytics?site=${encodeURIComponent(site.name)}`
               );
-            });
+            };
           }
         });
       });
     });
-
-    // =============================
-    // CLEANUP
-    // =============================
 
     return () => {
       map.remove();
